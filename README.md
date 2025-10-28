@@ -14,6 +14,17 @@ go get github.com/cubetiqlabs/gopkg
 
 ## Packages
 
+### Configuration (`config`)
+
+Production-ready YAML configuration management with Viper:
+
+- **Type-safe getters** - String, int, bool, duration, slice, and map types
+- **Multi-environment support** - Load environment-specific configs
+- **Environment variable overrides** - Auto-bind with configurable prefix
+- **Global singleton** - Optional global config instance
+- **Custom loaders** - Extensible for custom config sources
+- **Thread-safe** - Built-in RWMutex for concurrent access
+
 ### Middleware (`fiber/middleware`)
 
 Production-ready Fiber middleware for common use cases:
@@ -66,6 +77,43 @@ Common data models:
 - **`validation`** - Validation error structures
 
 ## Quick Start
+
+### Configuration Management
+
+```go
+package main
+
+import (
+    "github.com/cubetiqlabs/gopkg/config"
+)
+
+func main() {
+    // Initialize config
+    cfg, err := config.New(&config.Options{
+        ConfigPath: "./config",
+        Env:        "production",
+        EnvPrefix:  "APP",
+    })
+    if err != nil {
+        panic(err)
+    }
+    
+    // Type-safe access
+    port := cfg.GetIntOrDefault("server.port", 3000)
+    host := cfg.GetStringOrDefault("server.host", "localhost")
+    
+    // Or use structured config
+    type ServerConfig struct {
+        Host string `mapstructure:"host"`
+        Port int    `mapstructure:"port"`
+    }
+    var server ServerConfig
+    cfg.UnmarshalKey("server", &server)
+    
+    // Make globally available
+    config.SetGlobal(cfg)
+}
+```
 
 ### Request ID Middleware
 
@@ -294,9 +342,9 @@ MIT License - See LICENSE file for details
 
 ## Roadmap
 
+- [x] Configuration management
 - [ ] HTTP client utilities
 - [ ] Database helpers
-- [ ] Configuration management
 - [ ] Pagination utilities
 - [ ] Storage abstractions (S3, GCS, local)
 - [ ] Cache abstractions (Redis, in-memory)
