@@ -32,7 +32,7 @@ func Init(level string, development bool) (*zap.Logger, error) {
 	if development {
 		stackKey = "stack"
 	}
-	
+
 	once.Do(func() {
 		cfg := zap.Config{
 			Level:       zap.NewAtomicLevelAt(parseLevel(level)),
@@ -54,7 +54,7 @@ func Init(level string, development bool) (*zap.Logger, error) {
 		}
 		logger, err = cfg.Build()
 	})
-	
+
 	return logger, err
 }
 

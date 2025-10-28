@@ -23,12 +23,12 @@ func AdminMiddleware(expected string) fiber.Handler {
 		if expected == "" {
 			return fiber.ErrForbidden
 		}
-		
+
 		secret := c.Get("X-Admin-Secret")
 		if secret == "" || secret != expected {
 			return fiber.ErrUnauthorized
 		}
-		
+
 		return c.Next()
 	}
 }

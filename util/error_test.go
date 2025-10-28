@@ -9,7 +9,7 @@ import (
 
 func TestNotFoundError(t *testing.T) {
 	err := NotFoundError("user not found")
-	
+
 	fiberErr, ok := err.(*fiber.Error)
 	assert.True(t, ok, "should return fiber.Error")
 	assert.Equal(t, fiber.StatusNotFound, fiberErr.Code)
@@ -18,7 +18,7 @@ func TestNotFoundError(t *testing.T) {
 
 func TestBadRequestError(t *testing.T) {
 	err := BadRequestError("invalid input")
-	
+
 	fiberErr, ok := err.(*fiber.Error)
 	assert.True(t, ok, "should return fiber.Error")
 	assert.Equal(t, fiber.StatusBadRequest, fiberErr.Code)
@@ -27,7 +27,7 @@ func TestBadRequestError(t *testing.T) {
 
 func TestUnauthorizedError(t *testing.T) {
 	err := UnauthorizedError("invalid token")
-	
+
 	fiberErr, ok := err.(*fiber.Error)
 	assert.True(t, ok, "should return fiber.Error")
 	assert.Equal(t, fiber.StatusUnauthorized, fiberErr.Code)
@@ -36,7 +36,7 @@ func TestUnauthorizedError(t *testing.T) {
 
 func TestForbiddenError(t *testing.T) {
 	err := ForbiddenError("access denied")
-	
+
 	fiberErr, ok := err.(*fiber.Error)
 	assert.True(t, ok, "should return fiber.Error")
 	assert.Equal(t, fiber.StatusForbidden, fiberErr.Code)
@@ -45,7 +45,7 @@ func TestForbiddenError(t *testing.T) {
 
 func TestConflictError(t *testing.T) {
 	err := ConflictError("resource already exists")
-	
+
 	fiberErr, ok := err.(*fiber.Error)
 	assert.True(t, ok, "should return fiber.Error")
 	assert.Equal(t, fiber.StatusConflict, fiberErr.Code)
@@ -54,7 +54,7 @@ func TestConflictError(t *testing.T) {
 
 func TestInternalServerError(t *testing.T) {
 	err := InternalServerError("database connection failed")
-	
+
 	fiberErr, ok := err.(*fiber.Error)
 	assert.True(t, ok, "should return fiber.Error")
 	assert.Equal(t, fiber.StatusInternalServerError, fiberErr.Code)
@@ -63,7 +63,7 @@ func TestInternalServerError(t *testing.T) {
 
 func TestServiceUnavailableError(t *testing.T) {
 	err := ServiceUnavailableError("service temporarily unavailable")
-	
+
 	fiberErr, ok := err.(*fiber.Error)
 	assert.True(t, ok, "should return fiber.Error")
 	assert.Equal(t, fiber.StatusServiceUnavailable, fiberErr.Code)
@@ -72,7 +72,7 @@ func TestServiceUnavailableError(t *testing.T) {
 
 func TestTooManyRequestsError(t *testing.T) {
 	err := TooManyRequestsError("rate limit exceeded")
-	
+
 	fiberErr, ok := err.(*fiber.Error)
 	assert.True(t, ok, "should return fiber.Error")
 	assert.Equal(t, fiber.StatusTooManyRequests, fiberErr.Code)
@@ -94,7 +94,7 @@ func TestNewError(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := NewError(tt.code, tt.message)
-			
+
 			fiberErr, ok := err.(*fiber.Error)
 			assert.True(t, ok, "should return fiber.Error")
 			assert.Equal(t, tt.expected, fiberErr.Code)

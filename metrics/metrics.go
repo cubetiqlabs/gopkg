@@ -68,18 +68,18 @@ type Registry struct {
 	// HTTP metrics
 	RequestsTotal   *Counter   // Total HTTP requests
 	RequestDuration *Histogram // HTTP request duration in milliseconds
-	
+
 	// Rate limiting metrics
 	RateAllowed  *Counter // Requests allowed by rate limiter
 	RateRejected *Counter // Requests rejected by rate limiter
-	
+
 	// gRPC metrics
 	GrpcRequests *Counter   // Total gRPC requests
 	GrpcDuration *Histogram // gRPC request duration in milliseconds
-	
+
 	// System metrics
 	Started time.Time // When the registry was created
-	
+
 	// Custom labeled metrics
 	mu      sync.RWMutex
 	labeled map[string]*Counter // key: metric|labelString
@@ -112,12 +112,12 @@ func NewRegistry() *Registry {
 func (r *Registry) IncLabeled(metric string, labels map[string]string) {
 	// Generate stable key from sorted labels
 	key := buildLabelKey(metric, labels)
-	
+
 	// Fast path: read lock first
 	r.mu.RLock()
 	c, ok := r.labeled[key]
 	r.mu.RUnlock()
-	
+
 	if !ok {
 		// Slow path: write lock to create counter
 		r.mu.Lock()
@@ -128,18 +128,18 @@ func (r *Registry) IncLabeled(metric string, labels map[string]string) {
 		}
 		r.mu.Unlock()
 	}
-	
+
 	c.Inc()
 }
 
 // AddLabeled adds delta to a labeled counter.
 func (r *Registry) AddLabeled(metric string, labels map[string]string, delta uint64) {
 	key := buildLabelKey(metric, labels)
-	
+
 	r.mu.RLock()
 	c, ok := r.labeled[key]
 	r.mu.RUnlock()
-	
+
 	if !ok {
 		r.mu.Lock()
 		if c, ok = r.labeled[key]; !ok {
@@ -148,7 +148,7 @@ func (r *Registry) AddLabeled(metric string, labels map[string]string, delta uin
 		}
 		r.mu.Unlock()
 	}
-	
+
 	c.Add(delta)
 }
 
@@ -158,20 +158,20 @@ func buildLabelKey(metric string, labels map[string]string) string {
 	if len(labels) == 0 {
 		return metric
 	}
-	
+
 	// Sort keys for consistency
 	keys := make([]string, 0, len(labels))
 	for k := range labels {
 		keys = append(keys, k)
 	}
 	sort.Strings(keys)
-	
+
 	// Build label string
 	parts := make([]string, 0, len(keys))
 	for _, k := range keys {
 		parts = append(parts, k+"="+labels[k])
 	}
-	
+
 	return metric + "|" + strings.Join(parts, ",")
 }
 
@@ -186,9 +186,9 @@ func buildLabelKey(metric string, labels map[string]string) string {
 //	custom_metric{label1="value1",label2="value2"} 42
 func (r *Registry) RenderPrometheus() string {
 	uptime := time.Since(r.Started).Seconds()
-	
+
 	sb := &strings.Builder{}
-	
+
 	// Base metrics
 	fmt.Fprintf(sb, "http_requests_total %d\n", r.RequestsTotal.Get())
 	fmt.Fprintf(sb, "http_request_duration_ms_avg %.2f\n", r.RequestDuration.Avg())
@@ -199,17 +199,17 @@ func (r *Registry) RenderPrometheus() string {
 	fmt.Fprintf(sb, "uptime_seconds %.0f\n", uptime)
 	fmt.Fprintf(sb, "grpc_requests_total %d\n", r.GrpcRequests.Get())
 	fmt.Fprintf(sb, "grpc_request_duration_ms_avg %.2f\n", r.GrpcDuration.Avg())
-	
+
 	// Labeled metrics
 	r.mu.RLock()
 	defer r.mu.RUnlock()
-	
+
 	for key, counter := range r.labeled {
 		// Parse key: metric|label1=value1,label2=value2
 		parts := strings.SplitN(key, "|", 2)
 		metric := parts[0]
 		lbls := ""
-		
+
 		if len(parts) == 2 && parts[1] != "" {
 			// Convert label string to Prometheus format: {label1="value1",label2="value2"}
 			lblPairs := strings.Split(parts[1], ",")
@@ -218,10 +218,10 @@ func (r *Registry) RenderPrometheus() string {
 			}
 			lbls = "{" + strings.Join(lblPairs, ",") + "}"
 		}
-		
+
 		fmt.Fprintf(sb, "%s%s %d\n", metric, lbls, counter.Get())
 	}
-	
+
 	return sb.String()
 }
 
@@ -233,7 +233,7 @@ func (r *Registry) Reset() {
 	r.RateRejected = &Counter{}
 	r.GrpcRequests = &Counter{}
 	r.GrpcDuration = &Histogram{}
-	
+
 	r.mu.Lock()
 	r.labeled = make(map[string]*Counter)
 	r.mu.Unlock()

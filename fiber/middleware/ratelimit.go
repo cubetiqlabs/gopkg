@@ -10,9 +10,9 @@ import (
 )
 
 const (
-	defaultMaxBuckets       = 10000             // Prevent memory exhaustion
-	bucketCleanupInterval   = 5 * time.Minute   // How often to clean up stale buckets
-	bucketInactiveThreshold = 15 * time.Minute  // When to consider a bucket stale
+	defaultMaxBuckets       = 10000            // Prevent memory exhaustion
+	bucketCleanupInterval   = 5 * time.Minute  // How often to clean up stale buckets
+	bucketInactiveThreshold = 15 * time.Minute // When to consider a bucket stale
 )
 
 // RateLimiter implements a token bucket rate limiter per key.
@@ -105,7 +105,7 @@ func (rl *RateLimiter) take(key string, rate int) (allowed bool, retryAfter time
 	elapsed := now.Sub(b.last).Minutes()
 	if elapsed > 0 {
 		b.tokens += elapsed * float64(rate)
-		
+
 		// Cap at burst capacity (half of rate)
 		maxTokens := float64(rate / 2)
 		if maxTokens < 1 {
@@ -130,7 +130,7 @@ func (rl *RateLimiter) take(key string, rate int) (allowed bool, retryAfter time
 	if retry < time.Second {
 		retry = time.Second
 	}
-	
+
 	return false, retry
 }
 
@@ -172,7 +172,7 @@ type RateLimitConfig struct {
 	// KeyGenerator generates a unique key for rate limiting
 	// Default: uses IP address
 	KeyGenerator func(c *fiber.Ctx) string
-	
+
 	// RateGetter returns the rate limit for a specific request
 	// Default: uses the limiter's default rate
 	RateGetter func(c *fiber.Ctx) int
@@ -228,16 +228,16 @@ func RateLimitMiddlewareWithConfig(limiter *RateLimiter, reg *metrics.Registry, 
 
 		// Check rate limit
 		allowed, retryAfter := limiter.take(key, rate)
-		
+
 		if !allowed {
 			// Record rejection metric
 			if reg != nil {
 				reg.RateRejected.Inc()
 			}
-			
+
 			// Set Retry-After header
 			c.Set("Retry-After", strconv.Itoa(int(retryAfter.Seconds())))
-			
+
 			// Return 429 Too Many Requests
 			return fiber.NewError(fiber.StatusTooManyRequests, "rate limit exceeded")
 		}

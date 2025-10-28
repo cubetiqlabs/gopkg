@@ -10,17 +10,17 @@ import (
 type SecurityHeadersConfig struct {
 	// HSTSMaxAge sets the max-age for Strict-Transport-Security header (default: 31536000 = 1 year)
 	HSTSMaxAge int
-	
+
 	// ContentSecurityPolicy defines the CSP header value
 	// Default: "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'"
 	ContentSecurityPolicy string
-	
+
 	// EnableXSSProtection enables X-XSS-Protection header (default: true)
 	EnableXSSProtection bool
-	
+
 	// EnableFrameOptions enables X-Frame-Options header (default: true)
 	EnableFrameOptions bool
-	
+
 	// EnableContentTypeNosniff enables X-Content-Type-Options header (default: true)
 	EnableContentTypeNosniff bool
 }
@@ -55,7 +55,7 @@ func SecurityHeadersWithConfig(cfg SecurityHeadersConfig) fiber.Handler {
 	if cfg.ContentSecurityPolicy == "" {
 		cfg.ContentSecurityPolicy = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'"
 	}
-	
+
 	// Default to enabled
 	if !cfg.EnableXSSProtection {
 		cfg.EnableXSSProtection = true

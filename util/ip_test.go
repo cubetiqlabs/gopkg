@@ -85,7 +85,7 @@ func TestGetClientIP(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			app := fiber.New()
-			
+
 			var resultIP string
 			app.Get("/test", func(c *fiber.Ctx) error {
 				resultIP = GetClientIP(c)
@@ -96,7 +96,7 @@ func TestGetClientIP(t *testing.T) {
 			for k, v := range tt.headers {
 				req.Header.Set(k, v)
 			}
-			
+
 			_, err := app.Test(req)
 			assert.NoError(t, err)
 			assert.Equal(t, tt.expectedIP, resultIP, tt.description)
@@ -106,7 +106,7 @@ func TestGetClientIP(t *testing.T) {
 
 func TestGetClientIP_HeaderPriority(t *testing.T) {
 	app := fiber.New()
-	
+
 	var resultIP string
 	app.Get("/test", func(c *fiber.Ctx) error {
 		resultIP = GetClientIP(c)
@@ -118,11 +118,10 @@ func TestGetClientIP_HeaderPriority(t *testing.T) {
 	req.Header.Set("CF-Connecting-IP", "1.1.1.1")
 	req.Header.Set("X-Real-IP", "2.2.2.2")
 	req.Header.Set("X-Forwarded-For", "3.3.3.3, 4.4.4.4")
-	
+
 	_, err := app.Test(req)
 	assert.NoError(t, err)
-	
+
 	// CloudFlare header should win
 	assert.Equal(t, "1.1.1.1", resultIP, "Expected CF-Connecting-IP to have highest priority")
 }
-

@@ -12,15 +12,15 @@ import (
 type AccessLogConfig struct {
 	// Logger is the zap logger instance (required)
 	Logger *zap.Logger
-	
+
 	// LevelResolver determines log level based on status code and error
 	// Default: 2xx/3xx = Info, 4xx = Warn, 5xx = Error
 	LevelResolver func(status int, err error) zapcore.Level
-	
+
 	// IncludeHeaders list of headers to include in logs (case-insensitive)
 	// Example: []string{"X-Request-ID", "User-Agent"}
 	IncludeHeaders []string
-	
+
 	// Skip is a function to skip logging for certain requests
 	// Example: func(c *fiber.Ctx) bool { return c.Path() == "/health" }
 	Skip func(c *fiber.Ctx) bool
@@ -69,7 +69,7 @@ func AccessLogWithConfig(cfg *AccessLogConfig) fiber.Handler {
 
 		// Determine status code
 		status := determineStatus(c, err)
-		
+
 		// Determine log level
 		level := cfg.LevelResolver(status, err)
 

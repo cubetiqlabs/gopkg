@@ -17,7 +17,7 @@ type ErrorResponse struct {
 type ErrorHandlerConfig struct {
 	// Logger for logging internal errors (optional)
 	Logger *zap.Logger
-	
+
 	// HideInternalErrors when true, returns generic message for non-Fiber errors (default: true)
 	HideInternalErrors bool
 }

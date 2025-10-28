@@ -91,6 +91,6 @@ func TenantAuth(ctx context.Context) (TenantAuthValues, bool) {
 	result.TenantID = tenantID
 	appID, _ := AppID(ctx)
 	result.AppID = appID
-	
+
 	return result, true
 }

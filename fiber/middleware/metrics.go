@@ -28,18 +28,18 @@ import (
 func Metrics(reg *metrics.Registry) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		start := time.Now()
-		
+
 		// Process request
 		err := c.Next()
-		
+
 		// Record metrics
 		durMs := time.Since(start).Milliseconds()
 		reg.RequestsTotal.Inc()
 		reg.RequestDuration.Observe(durMs)
-		
+
 		// Extract tenant if available
 		tenantID, _ := contextx.TenantID(c.UserContext())
-		
+
 		// Record labeled metric
 		reg.IncLabeled("http_requests", map[string]string{
 			"method": c.Method(),
@@ -47,7 +47,7 @@ func Metrics(reg *metrics.Registry) fiber.Handler {
 			"status": strconv.Itoa(c.Response().StatusCode()),
 			"tenant": tenantID,
 		})
-		
+
 		return err
 	}
 }

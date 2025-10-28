@@ -73,7 +73,7 @@ func TestWithAPIKeyPrefix(t *testing.T) {
 func TestWithTenantAuthValues(t *testing.T) {
 	ctx := context.Background()
 	now := time.Now()
-	
+
 	values := TenantAuthValues{
 		TenantID:  "tenant-123",
 		AppID:     "app-456",
@@ -101,7 +101,7 @@ func TestWithTenantAuthValues(t *testing.T) {
 
 func TestTenantAuthFallback(t *testing.T) {
 	ctx := context.Background()
-	
+
 	// Set individual values without using WithTenantAuthValues
 	ctx = WithTenant(ctx, "tenant-789")
 	ctx = WithApplication(ctx, "app-101")
@@ -121,7 +121,7 @@ func TestTenantAuthFallback(t *testing.T) {
 
 func TestTenantAuthNoTenant(t *testing.T) {
 	ctx := context.Background()
-	
+
 	_, ok := TenantAuth(ctx)
 	if ok {
 		t.Fatal("expected tenant auth to fail when no tenant ID")
