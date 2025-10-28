@@ -116,3 +116,73 @@ func FromContext(ctx context.Context) *zap.Logger {
 }
 
 type ctxKeyLogger struct{}
+
+// Info logs an info message
+func Info(msg string, fields ...zap.Field) {
+	if logger != nil {
+		logger.Info(msg, fields...)
+	}
+}
+
+// Infof logs an info message with format
+func Infof(msg string, args ...interface{}) {
+	if logger != nil {
+		logger.Sugar().Infof(msg, args...)
+	}
+}
+
+// Debug logs a debug message
+func Debug(msg string, fields ...zap.Field) {
+	if logger != nil {
+		logger.Debug(msg, fields...)
+	}
+}
+
+// Debugf logs a debug message with format
+func Debugf(msg string, args ...interface{}) {
+	if logger != nil {
+		logger.Sugar().Debugf(msg, args...)
+	}
+}
+
+// Warn logs a warning message
+func Warn(msg string, fields ...zap.Field) {
+	if logger != nil {
+		logger.Warn(msg, fields...)
+	}
+}
+
+// Warnf logs a warning message with format
+func Warnf(msg string, args ...interface{}) {
+	if logger != nil {
+		logger.Sugar().Warnf(msg, args...)
+	}
+}
+
+// Error logs an error message
+func Error(msg string, fields ...zap.Field) {
+	if logger != nil {
+		logger.Error(msg, fields...)
+	}
+}
+
+// Errorf logs an error message with format
+func Errorf(msg string, args ...interface{}) {
+	if logger != nil {
+		logger.Sugar().Errorf(msg, args...)
+	}
+}
+
+// Fatal logs a fatal message and exits
+func Fatal(msg string, fields ...zap.Field) {
+	if logger != nil {
+		logger.Fatal(msg, fields...)
+	}
+}
+
+// Fatalf logs a fatal message with format and exits
+func Fatalf(msg string, args ...interface{}) {
+	if logger != nil {
+		logger.Sugar().Fatalf(msg, args...)
+	}
+}
