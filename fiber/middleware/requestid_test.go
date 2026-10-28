@@ -4,13 +4,13 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 func TestRequestIDMiddlewareSetsHeader(t *testing.T) {
 	app := fiber.New()
 	app.Use(RequestID())
-	app.Get("/test", func(c *fiber.Ctx) error { return c.SendStatus(fiber.StatusNoContent) })
+	app.Get("/test", func(c fiber.Ctx) error { return c.SendStatus(fiber.StatusNoContent) })
 
 	req := httptest.NewRequest("GET", "/test", nil)
 	resp, err := app.Test(req)
@@ -27,7 +27,7 @@ func TestRequestIDMiddlewareSetsHeader(t *testing.T) {
 func TestRequestIDMiddlewarePreservesExisting(t *testing.T) {
 	app := fiber.New()
 	app.Use(RequestID())
-	app.Get("/test", func(c *fiber.Ctx) error {
+	app.Get("/test", func(c fiber.Ctx) error {
 		return c.SendString(c.Get(RequestIDHeader))
 	})
 
@@ -51,7 +51,7 @@ func TestRequestIDStoredInLocals(t *testing.T) {
 	app.Use(RequestID())
 
 	var localID string
-	app.Get("/test", func(c *fiber.Ctx) error {
+	app.Get("/test", func(c fiber.Ctx) error {
 		localID = c.Locals("request_id").(string)
 		return c.SendStatus(fiber.StatusOK)
 	})

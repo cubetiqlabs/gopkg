@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 // AdminMiddleware returns a Fiber handler that validates the X-Admin-Secret header.
@@ -18,7 +18,7 @@ import (
 // - Consider using this in combination with rate limiting
 // - For production, consider more robust authentication (JWT, OAuth)
 func AdminMiddleware(expected string) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+	return func(c fiber.Ctx) error {
 		// Reject if no secret is configured (safety check)
 		if expected == "" {
 			return fiber.ErrForbidden

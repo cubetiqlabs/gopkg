@@ -1,12 +1,12 @@
 package util
 
 import (
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 // GetClientIP extracts the real client IP from various headers and fallbacks.
 // Priority: CF-Connecting-IP > X-Real-IP > X-Forwarded-For > RemoteAddr
-func GetClientIP(c *fiber.Ctx) string {
+func GetClientIP(c fiber.Ctx) string {
 	// Cloudflare proxy: CF-Connecting-IP header contains the actual client IP
 	cfConnectingIP := c.Get("CF-Connecting-IP")
 	if cfConnectingIP != "" {

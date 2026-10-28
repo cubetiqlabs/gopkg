@@ -4,7 +4,7 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 // RequestIDHeader is the default header name for request IDs.
@@ -19,7 +19,7 @@ const RequestIDHeader = "X-Request-ID"
 // - Stored in context locals as "request_id"
 // - Available for logging and tracing
 func RequestID() fiber.Handler {
-	return func(c *fiber.Ctx) error {
+	return func(c fiber.Ctx) error {
 		rid := c.Get(RequestIDHeader)
 		if rid == "" {
 			rid = newRID()

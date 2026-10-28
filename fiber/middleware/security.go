@@ -3,7 +3,7 @@ package middleware
 import (
 	"strconv"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 // SecurityHeadersConfig defines configuration for security headers.
@@ -67,7 +67,7 @@ func SecurityHeadersWithConfig(cfg SecurityHeadersConfig) fiber.Handler {
 		cfg.EnableContentTypeNosniff = true
 	}
 
-	return func(c *fiber.Ctx) error {
+	return func(c fiber.Ctx) error {
 		// HSTS: Force HTTPS connections
 		// Only set over HTTPS to avoid browser warnings
 		if c.Protocol() == "https" {

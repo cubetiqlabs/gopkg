@@ -1,7 +1,7 @@
 package util
 
 import (
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 // HTTP status code constants

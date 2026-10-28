@@ -3,7 +3,7 @@ package middleware
 import (
 	"time"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -22,8 +22,8 @@ type AccessLogConfig struct {
 	IncludeHeaders []string
 
 	// Skip is a function to skip logging for certain requests
-	// Example: func(c *fiber.Ctx) bool { return c.Path() == "/health" }
-	Skip func(c *fiber.Ctx) bool
+	// Example: func(c fiber.Ctx) bool { return c.Path() == "/health" }
+	Skip func(c fiber.Ctx) bool
 }
 
 // AccessLog returns a middleware with default configuration.
@@ -47,7 +47,7 @@ func AccessLog() fiber.Handler {
 //	app.Use(middleware.AccessLogWithConfig(&middleware.AccessLogConfig{
 //	    Logger: logger,
 //	    IncludeHeaders: []string{"X-Request-ID", "User-Agent"},
-//	    Skip: func(c *fiber.Ctx) bool {
+//	    Skip: func(c fiber.Ctx) bool {
 //	        return c.Path() == "/health" || c.Path() == "/metrics"
 //	    },
 //	}))
@@ -57,7 +57,7 @@ func AccessLogWithConfig(cfg *AccessLogConfig) fiber.Handler {
 		cfg.LevelResolver = defaultLevelResolver
 	}
 
-	return func(c *fiber.Ctx) error {
+	return func(c fiber.Ctx) error {
 		// Skip if configured
 		if cfg.Skip != nil && cfg.Skip(c) {
 			return c.Next()
@@ -129,7 +129,7 @@ func defaultLevelResolver(status int, err error) zapcore.Level {
 }
 
 // determineStatus extracts the response status code.
-func determineStatus(c *fiber.Ctx, err error) int {
+func determineStatus(c fiber.Ctx, err error) int {
 	if err != nil {
 		if e, ok := err.(*fiber.Error); ok {
 			return e.Code

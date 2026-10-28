@@ -4,7 +4,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -87,7 +87,7 @@ func TestGetClientIP(t *testing.T) {
 			app := fiber.New()
 
 			var resultIP string
-			app.Get("/test", func(c *fiber.Ctx) error {
+			app.Get("/test", func(c fiber.Ctx) error {
 				resultIP = GetClientIP(c)
 				return c.SendString("OK")
 			})
@@ -108,7 +108,7 @@ func TestGetClientIP_HeaderPriority(t *testing.T) {
 	app := fiber.New()
 
 	var resultIP string
-	app.Get("/test", func(c *fiber.Ctx) error {
+	app.Get("/test", func(c fiber.Ctx) error {
 		resultIP = GetClientIP(c)
 		return c.SendString("OK")
 	})

@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/cubetiqlabs/gopkg/metrics"
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 const (
@@ -171,11 +171,11 @@ func (rl *RateLimiter) evictOldestBucket(now time.Time) bool {
 type RateLimitConfig struct {
 	// KeyGenerator generates a unique key for rate limiting
 	// Default: uses IP address
-	KeyGenerator func(c *fiber.Ctx) string
+	KeyGenerator func(c fiber.Ctx) string
 
 	// RateGetter returns the rate limit for a specific request
 	// Default: uses the limiter's default rate
-	RateGetter func(c *fiber.Ctx) int
+	RateGetter func(c fiber.Ctx) int
 }
 
 // RateLimitMiddleware returns a Fiber middleware that enforces rate limits.
@@ -199,24 +199,24 @@ func RateLimitMiddleware(limiter *RateLimiter, reg *metrics.Registry) fiber.Hand
 //
 //	limiter := middleware.NewRateLimiter(600)
 //	app.Use(middleware.RateLimitMiddlewareWithConfig(limiter, nil, middleware.RateLimitConfig{
-//	    KeyGenerator: func(c *fiber.Ctx) string {
+//	    KeyGenerator: func(c fiber.Ctx) string {
 //	        return c.Get("X-API-Key") // Rate limit by API key
 //	    },
 //	}))
 func RateLimitMiddlewareWithConfig(limiter *RateLimiter, reg *metrics.Registry, cfg RateLimitConfig) fiber.Handler {
 	// Set defaults
 	if cfg.KeyGenerator == nil {
-		cfg.KeyGenerator = func(c *fiber.Ctx) string {
+		cfg.KeyGenerator = func(c fiber.Ctx) string {
 			return c.IP() // Default: rate limit by IP
 		}
 	}
 	if cfg.RateGetter == nil {
-		cfg.RateGetter = func(c *fiber.Ctx) int {
+		cfg.RateGetter = func(c fiber.Ctx) int {
 			return limiter.ratePerMin
 		}
 	}
 
-	return func(c *fiber.Ctx) error {
+	return func(c fiber.Ctx) error {
 		// Generate rate limit key
 		key := cfg.KeyGenerator(c)
 		if key == "" {

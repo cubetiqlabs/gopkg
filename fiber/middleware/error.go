@@ -3,7 +3,7 @@ package middleware
 import (
 	"errors"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 	"go.uber.org/zap"
 )
 
@@ -58,7 +58,7 @@ func ErrorHandlerWithConfig(cfg ErrorHandlerConfig) fiber.ErrorHandler {
 		cfg.HideInternalErrors = true
 	}
 
-	return func(c *fiber.Ctx, err error) error {
+	return func(c fiber.Ctx, err error) error {
 		// Fiber errors are considered safe to expose (they're explicitly created by handlers)
 		var fiberErr *fiber.Error
 		if errors.As(err, &fiberErr) {

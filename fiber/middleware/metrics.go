@@ -6,7 +6,7 @@ import (
 
 	"github.com/cubetiqlabs/gopkg/contextx"
 	"github.com/cubetiqlabs/gopkg/metrics"
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 // Metrics returns a Fiber middleware that collects request metrics.
@@ -21,12 +21,12 @@ import (
 //	app.Use(middleware.Metrics(reg))
 //
 //	// Expose metrics endpoint
-//	app.Get("/metrics", func(c *fiber.Ctx) error {
+//	app.Get("/metrics", func(c fiber.Ctx) error {
 //	    c.Set("Content-Type", "text/plain")
 //	    return c.SendString(reg.RenderPrometheus())
 //	})
 func Metrics(reg *metrics.Registry) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+	return func(c fiber.Ctx) error {
 		start := time.Now()
 
 		// Process request
