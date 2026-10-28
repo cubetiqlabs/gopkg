@@ -38,7 +38,7 @@ func Metrics(reg *metrics.Registry) fiber.Handler {
 		reg.RequestDuration.Observe(durMs)
 
 		// Extract tenant if available
-		tenantID, _ := contextx.TenantID(c.UserContext())
+		tenantID, _ := contextx.TenantID(c.Context())
 
 		// Record labeled metric
 		reg.IncLabeled("http_requests", map[string]string{
